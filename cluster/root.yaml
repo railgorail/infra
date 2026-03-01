@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-root
+  namespace: argocd
+spec:
+  project: default
+
+  # Git репозиторий с GitOps инфраструктурой
+  source:
+    repoURL: https://github.com/railgorail/infra.git
+    targetRevision: main
+    path: cluster/applications     # корень репозитория
+
+  # Кластер для деплоя (тот же, что и у дочерних приложений)
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  # Автоматическая синхронизация
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

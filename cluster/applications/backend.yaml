@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend
+  namespace: argocd
+spec:
+  project: default
+
+  # Git репозиторий, где хранится Helm chart (GitOps repo)
+  source:
+    repoURL: https://github.com/railgorail/infra.git
+    targetRevision: main   
+    path: charts/backend
+    helm:
+      valueFiles:
+        - values.yaml
+
+  # Кластер, куда деплоить
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: myapp
+
+  # Авто-синхронизация и обновление
+  syncPolicy:
+    automated:
+      prune: true           # удалять ресурсы, которых нет в Git
+      selfHeal: true        # авто-исправление drifts
+    syncOptions:
+      - CreateNamespace=true # создавать namespace, если его нет

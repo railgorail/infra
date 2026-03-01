@@ -1,0 +1,14 @@
+# Default values for backend chart.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/railgorail/backend
+  pullPolicy: IfNotPresent
+  # Overridden by CI
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
